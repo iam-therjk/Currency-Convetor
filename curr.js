@@ -1,7 +1,7 @@
 const BASE_URL =
-  "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json";
+  "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/";
 
-  //  "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies"
+//  "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies"
 
 const dropdowns = document.querySelectorAll(".dropdown select");
 const btn = document.querySelector("form button");
@@ -28,16 +28,23 @@ for (let select of dropdowns) {
 }
 
 const updateExchangeRate = async () => {
-  let amount = document.querySelector(".amount input");
+  let amount = document.querySelector(".amount_input");
   let amtVal = amount.value;
+  console.log(amtVal);
   if (amtVal === "" || amtVal < 1) {
     amtVal = 1;
     amount.value = "1";
   }
-  const URL = `${BASE_URL}/${fromCurr.value.toLowerCase()}/${toCurr.value.toLowerCase()}.json`;
-  let response = await fetch(URL);
-  let data = await response.json();
-  let rate = data[toCurr.value.toLowerCase()];
+
+  const fromCurrency = fromCurr.value.toLowerCase();
+
+  const URL = `${BASE_URL}${fromCurrency}.json`;
+
+  console.log(fromCurrency);
+  let data = await fetch(URL).then((res) => res.json());
+  console.log(data[fromCurrency]);
+
+  const rate = data[fromCurrency][toCurr.value.toLowerCase()];
 
   let finalAmount = amtVal * rate;
   msg.innerText = `${amtVal} ${fromCurr.value} = ${finalAmount} ${toCurr.value}`;
